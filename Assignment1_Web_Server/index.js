@@ -1,6 +1,6 @@
+import * as data from "./data.js";
+import http from 'http';
 
-
-const http = require("http")
 const PORT = 3000
 const server = http.createServer((req,res) => {
     const path = req.url.toLowerCase();
@@ -21,6 +21,7 @@ const server = http.createServer((req,res) => {
             break;
     }
 })
+
 server.listen(PORT, (error)=>{
     if(error){
         console.log('Something went wrong.')
@@ -28,3 +29,6 @@ server.listen(PORT, (error)=>{
         console.log(`Server is listening on port ${PORT}`)
     }
 })
+
+console.log(data.getAll('seahawks'))
+console.log(data.getItem(16))
