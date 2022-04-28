@@ -1,13 +1,31 @@
 import * as data from "./data.js";
 import http from 'http';
+import { parse } from "querystring";
+import { query } from "express";
+
+
 
 const PORT = 3000
 const server = http.createServer((req,res) => {
     const path = req.url.toLowerCase();
-    switch(path) {
+    const dataInfo = JSON.stringify(data.getAll('seahawks'))
+    let url_parts = req.url.split("?");
+    let query = parse(url_parts[1]);
+    let player = query["number"]
+    let info = JSON.stringify(data.getItem(player))
+  
+
+    
+    
+
+    switch(url_parts[0]) {
+        case '/detail':
+            res.writeHead(200, {'Content-Type': 'text/plain'});
+            res.end(info);
+            break;
         case '/':
             res.writeHead(200, {'Content-Type': 'text/plain'});
-            res.write('Seahawks are great')
+            res.write(dataInfo);
             res.end();
             break;
         case '/about':
@@ -30,5 +48,4 @@ server.listen(PORT, (error)=>{
     }
 })
 
-console.log(data.getAll('seahawks'))
-console.log(data.getItem(16))
+
