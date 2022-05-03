@@ -61,6 +61,8 @@ describe("Seahawks Module-addItem", () => {
 describe("Seahawks Module-getItem", () => {
     it("retrieves requested player", function() {
       var result = data.getItem(14);
+      console.log("here is your requested player data for: " + result.name);
+      console.log(data.getItem(14));
       expect(result).to.deep.equal({number : 14, position : 'wr', year : 4, name : 'D.K. Metcalfe'});
     });
    
