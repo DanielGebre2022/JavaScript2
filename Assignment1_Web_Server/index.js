@@ -1,9 +1,10 @@
 import * as data from "./data.js";
-import fs from "fs";
-import http from 'http';
-import { parse } from "querystring";
-import { query } from "express";
+//import fs from "fs";
+//import http from 'http';
+//import { parse } from "querystring";
+//import { query } from "express";
 import express from "express";
+//import mongoose from "mongoose";
 
 
 const app = express();
@@ -12,6 +13,7 @@ app.use(express.static('./public')); // set location for static files
 app.use(express.urlencoded()); //Parse URL-encoded bodies
 app.set('view engine', 'ejs');
 
+console.log(data.getItem(16))
 
 
 // send static file as response
