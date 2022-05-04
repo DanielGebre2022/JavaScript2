@@ -25,6 +25,7 @@ export const getItem = (value) => {
         
     })
     
+    
 }
 export const addItem = (array, element) => { 
     const i = seahawks.findIndex(player => player.number === element.number);

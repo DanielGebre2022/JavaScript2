@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { connectionString } from './credentials.js';
+import  { connectionString }  from './credentials.js';
 const { Schema } = mongoose;
 
 // For security, connectionString should be in a separate file and excluded from git

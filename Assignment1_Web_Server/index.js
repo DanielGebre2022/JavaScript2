@@ -5,6 +5,7 @@ import * as data from "./data.js";
 //import { query } from "express";
 import express from "express";
 //import mongoose from "mongoose";
+import { Seahawks } from "./Seahawks.js"
 
 
 const app = express();
@@ -13,14 +14,18 @@ app.use(express.static('./public')); // set location for static files
 app.use(express.urlencoded()); //Parse URL-encoded bodies
 app.set('view engine', 'ejs');
 
-console.log(data.getItem(16))
+
 
 
 // send static file as response
-app.get('/', (req,res) => {
-    res.type('text/html');
-    res.render('home', { seahawks: [ {number: 16, position: "wr", year: 9, name: "Tyler Lockette"},{number : 14, position : 'wr', year : 4, name : 'D.K. Metcalfe'}, {number : 32, position : 'rb', year : 6, name : 'Chris Carson'},{number : 20, position : 'rb', year : 4, name : 'Rashad Penny'},{number : 7, position : 'qb', year : 8, name : 'Gino Smith'} ]});
-   });
+app.get('/', (req, res, next) => {
+    Seahawks.find({}).lean()
+      .then((Seahawks) => {
+        // respond to browser only after db query completes
+        res.render('home', { Seahawks });
+      })
+      .catch(err => next(err))
+});
 
 
 
@@ -30,11 +35,14 @@ app.get('/about', (req,res) => {
     res.send('About page');
    });
 
-app.get('/detail', (req,res) => {
-    res.type('text/html');
-    let info = data.getItem(req.query.number)
-    console.log(info.name)
-    res.render('detail',  {  number: info.number, name: info.name, year: info.year, position: info.position });
+app.get('/detail', (req,res,next) => {
+    // db query can use request parameters
+    Seahawks.findOne({ "number": req.query.number }).lean()
+        .then((Seahawks) => {
+            console.log(Seahawks);
+            res.render('detail', { Seahawks } );
+        })
+        .catch(err => next(err));
 });
 
 
