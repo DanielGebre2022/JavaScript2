@@ -36,11 +36,23 @@ app.get('/about', (req,res) => {
    });
 
 app.get('/detail', (req,res,next) => {
+
     // db query can use request parameters
     Seahawks.findOne({ "number": req.query.number }).lean()
         .then((Seahawks) => {
-            console.log(Seahawks);
+            
             res.render('detail', { Seahawks } );
+        })
+        .catch(err => next(err));
+});
+
+app.get('/delete', (req,res,next) => {
+    // db query can use request parameters
+    const player = data.getItem(req.query.number)
+    Seahawks.deleteOne({ "number": req.query.number }).lean()
+        .then((Seahawks) => {
+            console.log(player);
+            res.render('delete', { player } );
         })
         .catch(err => next(err));
 });
