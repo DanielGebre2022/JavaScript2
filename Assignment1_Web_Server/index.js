@@ -1,11 +1,12 @@
 import * as data from "./data.js";
-//import fs from "fs";
-//import http from 'http';
-//import { parse } from "querystring";
-//import { query } from "express";
+import fs from "fs";
+import http from 'http';
+import { parse } from "querystring";
+import { query } from "express";
 import express from "express";
-//import mongoose from "mongoose";
+import mongoose from "mongoose";
 import { Seahawks } from "./Seahawks.js"
+import cors from "cors";
 
 
 const app = express();
@@ -28,7 +29,6 @@ app.get('/', (req, res, next) => {
 });
 
 
-
 // send plain text response
 app.get('/about', (req,res) => {
     res.type('text/plain');
@@ -36,11 +36,9 @@ app.get('/about', (req,res) => {
    });
 
 app.get('/detail', (req,res,next) => {
-
-    // db query can use request parameters
+// db query can use request parameters
     Seahawks.findOne({ "number": req.query.number }).lean()
         .then((Seahawks) => {
-            
             res.render('detail', { Seahawks } );
         })
         .catch(err => next(err));
@@ -58,7 +56,62 @@ app.get('/delete', (req,res,next) => {
 });
 
 
-   
+//API'S**API'S**API'S**API'S**API'S**API'S**API'S**API'S**API'S**API'S**
+
+//api that gets all the objects/documents.
+app.get('/api/getall', (req, res, next) => {
+    Seahawks.find({}).lean()
+      .then((Seahawks) => {
+        // respond to browser only after db query completes
+        res.json(Seahawks)
+      })
+      .catch(err => next(err))
+});
+
+//API that gets single document.
+app.get('/api/detail/:info', (req,res,next) => {
+    // db query can use request parameters
+    Seahawks.findOne({ "number": req.params.info }).lean()
+        .then((Seahawks) => {
+            res.json(Seahawks);
+        })
+        .catch(err => next(err));
+    });
+
+//API that deletes single document.
+app.get('/api/seahawks/delete/:numba', (req,res) => {
+    Seahawks.deleteOne({ number: req.params.numba}).lean()
+     .then((Seahawks) => {
+        res.json(Seahawks)
+     })
+     .catch(err => next(err))
+  });
+
+
+//addPlayer receives form data from inputPlayer
+app.get('/api/inputPlayer', (req,res) => {
+    res.render('inputPlayer');
+});
+
+app.post('/api/addPlayer', (req,res) => {
+    const player = {
+        name: req.body.name,
+        number: req.body.number, 
+        position: req.body.position, 
+        year: req.body.year
+    }
+    Seahawks.insertMany([
+                          {name: player.name, 
+                          number: player.number, 
+                          position: player.position, 
+                          year: player.year}
+                        ]);
+    
+    res.json(player);
+    
+});
+
+
 // define 404 handler
 app.use((req,res) => {
     res.type('text/plain');
@@ -68,7 +121,7 @@ app.use((req,res) => {
    
 app.listen(app.get('port'), () => {
     console.log('Express started');
-   });
+});
    
 
 /*
