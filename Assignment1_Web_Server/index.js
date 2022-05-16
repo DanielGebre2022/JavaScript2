@@ -9,7 +9,11 @@ import { Seahawks } from "./Seahawks.js"
 import cors from "cors";
 
 
+
+
 const app = express();
+app.use('/api', cors());
+app.use(express.json());
 app.set('port', process.env.PORT || 3000);
 app.use(express.static('./public')); // set location for static files
 app.use(express.urlencoded()); //Parse URL-encoded bodies
@@ -58,7 +62,7 @@ app.get('/delete', (req,res,next) => {
 
 //API'S**API'S**API'S**API'S**API'S**API'S**API'S**API'S**API'S**API'S**
 
-//api that gets all the objects/documents.
+//Api that gets all the objects/documents.
 app.get('/api/getall', (req, res, next) => {
     Seahawks.find({}).lean()
       .then((Seahawks) => {
@@ -107,7 +111,7 @@ app.post('/api/addPlayer', (req,res) => {
                           year: player.year}
                         ]);
     
-    res.json(player);
+    res.json(player + "Has been added");
     
 });
 
