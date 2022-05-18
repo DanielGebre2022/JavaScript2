@@ -23,15 +23,24 @@ app.set('view engine', 'ejs');
 
 
 // send static file as response
-app.get('/', (req, res, next) => {
+/*app.get('/', (req, res, next) => {
     Seahawks.find({}).lean()
       .then((Seahawks) => {
         // respond to browser only after db query completes
         res.render('home', { Seahawks });
       })
       .catch(err => next(err))
-});
+});*/
 
+
+app.get('/', (req, res, next) => {
+    Seahawks.find({}).lean()
+      .then((Seahawks) => {
+        // respond to browser only after db query completes
+        res.render('react-home', { Seahawks: JSON.stringify(Seahawks) });
+      })
+      .catch(err => next(err))
+});
 
 // send plain text response
 app.get('/about', (req,res) => {
