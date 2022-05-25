@@ -1,0 +1,61 @@
+
+write a function, organizeItems, that organizes items by category. The argument to the function is an array of item objects. 
+Each item object has 3 properties, category (string), itemName (string), and onSale (Boolean).
+The return value should be an object with category properties. Each property value is an array of items that belong to that 
+category and having onSale set to true should have '($)' appended to their item name. 
+This is an example of what needs to be returned from itemData:
+
+{
+  fruit:  ['apple', 'melon($)'],
+  canned: ['beans', 'corn($)', 'soup'],
+  frozen: ['pizza']
+};
+
+
+var itemData = [
+    { category: 'fruit', itemName: 'apple', onSale: false },
+    { category: 'canned', itemName: 'beans', onSale: false },
+    { category: 'canned', itemName: 'corn', onSale: true },
+    { category: 'frozen', itemName: 'pizza', onSale: false },
+    { category: 'fruit', itemName: 'melon', onSale: true },
+    { category: 'canned', itemName: 'soup', onSale: false },
+];
+
+
+
+
+
+
+
+//My Solution
+
+function organizeItems(items) {
+    let cat = [];
+    let cat2 = items.map(item =>item.category);
+    cat2.forEach((i)=>{
+        if (!cat.includes(i)) {
+            cat.push(i)
+        }
+    })
+    const obj = cat.reduce((accumulator, value) => {
+        return {...accumulator, [value]: []};
+      }, {});
+        
+      
+      for (const property in obj) {
+        items.forEach(element=> {
+          if(property == element.category && element.onSale == false){
+            var target = element.itemName
+            obj[property].push(target)
+          }
+          if(property == element.category && element.onSale == true){
+            var target = element.itemName + "($)"
+            obj[property].push(target)
+          }
+          
+        })
+      }
+    console.log(obj)
+    return obj;
+}
+organizeItems(itemData)
