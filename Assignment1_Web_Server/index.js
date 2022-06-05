@@ -27,7 +27,7 @@ app.set('view engine', 'ejs');
     Seahawks.find({}).lean()
       .then((Seahawks) => {
         // respond to browser only after db query completes
-        res.render('home', { Seahawks });
+        res.render('home_2', { Seahawks });
       })
       .catch(err => next(err))
 });*/

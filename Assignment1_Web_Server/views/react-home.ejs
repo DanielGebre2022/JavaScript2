@@ -12,46 +12,149 @@
   <body>
     <div id="root"></div>
     <script type="text/babel">
+      const PlayerDetail = (props) => {
+      return (
+      <div>
+        <hr/>
+        <h3>Player Detail</h3>
+        <form>
+          name: <input type="text" name="name" onChange={props.handleChange} value={props.player.name || ""} onChange={props.handleChange} /><br />
+          number: <input type="text" name="number" onChange={props.handleChange} value={props.player.number || ""} onChange={props.handleChange} /><br/>
+          position: <input type name="position" onChange={props.handleChange} value={props.player.position || ""} onChange={props.handleChange} /><br/>
+          year: <input type="text" name="year" onChange={props.handleChange} value={props.player.year || ""} onChange={props.handleChange} /><br/>
+        </form>
+        <button name="clear" onClick={props.clearForm}>Clear</button>&nbsp;
+        <button name="save" onClick={props.savePlayer}>Save</button>&nbsp;
+        <button name="delete" onClick={props.deletePlayer}>Delete</button>&nbsp; 
+      </div>
+      )
+    }
+    const ItemDetail = (props) => {
+      return <div> Detail <hr/> {props.item.number}, {props.item.name}</div>
+      
+      
+    }
     class App extends React.Component {
         constructor(props) {
             let Seahawks = <%- Seahawks %>;
-            let number = Seahawks.number
+            //let number = Seahawks.number
             console.log(Seahawks)
             super(props);
-            this.state = { Seahawks: 'test' }
-        }
+           
+            this.state = { 
+              Seahawks: Seahawks,
+              currentItem: {},
+              
+            }
+            /*playerLocater = (array, num) => {
+              for (var i = 0; i < array.length; i++){
+                for (var key in array[i]){
+                  if (array[i][key]=== num){
+                    return array[i]
+                  }
+                }
+              }
+            }*/
+        
+      
+          }
+          handleClick = (e) => {
+              
+              e.preventDefault();
+              //console.log(e.target);
+              //console.log(e.target.innerText);
+              //console.log(e.target.id);
+              //let key = e.target.number;
+              let plNum = parseInt(e.target.innerText)
+              let newPlayer = this.state.Seahawks.find((player) => player.number == plNum);
+              this.setState({"currentItem": newPlayer})
+              
+              //this.setState({"currentItem": newPlayer});
+              console.log(plNum);
+              //console.log(e.target.year)
+            }
+            saveItem = () => {
+              if(this.state.currentItem == {}) return
+              let newItem = this.state.currentItem;
+            }
+            selectItem = (event) => {
+              const found = this.state.Seahawks.find((player) => {
+                return player.number === parseInt(event.target.innerText)
+              });
+              this.setState({currentItem: found});
+            }
+            handleChange = (event) => {
+              let newItem = this.state.currentItem;
+              console.log(event.target.value)
+              newItem[event.target.name] = event.target.value;
+              this.setState({currentItem: newItem})
+            }
+            clearForm = () => {
+              this.setState({currentItem: {}})
+            }
+        
         render() {
             return (
-                <div></div>
+              <div>
+                <h2>Inventory</h2>
+                <Players players={ this.state.Seahawks } clickHandler={this.handleClick} /> 
+                <ItemDetail item={ this.state.currentItem } />
+                <PlayerDetail player={ this.state.currentItem }
+                  onChange={this.fieldChange}
+                  handleChange={this.handleChange}
+                  clearForm={this.clearForm}
+                  saveItem={this.saveItem}
+                  deleteItem={this.deleteItem}
+                  clickHandler={this.handleClick}
+                  />
+                
+              </div>
             )
         }
     }
-      let Seahawks = <%- Seahawks %>;
-      const playerList = Seahawks.map((item) => <li key={item.number}><a href={"/detail?number=" + item.number}>{item.number}</a></li>);
-      
-      const MyApp = (props)=> {
+   
+    
+    const Players = (props) => {
+        const playerList = props.players.map((player) => 
+          <li key={player.number} onClick={props.clickHandler}>{player.number}
+          </li>);
+          return <ul>{playerList}</ul>;
           
-          if (props) {
-              return <span>{playerList} </span>
-          }
-        return <h1>Hello, World!</h1>;
+        }
+        
+       
+
+    
+    /*const Detail = (props) => {
+      constructor(props) {
+        super(props)
+        
+      }
+      
+      render() {
+        
+         
+          //window.location.href = "/detail?number=" + e.target.innerText;
+        
+        let {name, number, position, year} = this.props.player;
+        return (<div>
+                  <li key={number} onClick={this.props.clickHandler}>{number}</li> 
+                </div>)
       }
 
+    }*/
+   
       const container = document.getElementById('root');
       const root = ReactDOM.createRoot(container);
-      root.render(<MyApp />);
-
+      root.render(<App />);
     </script>
     <!--
       Note: this page is a great way to try React but it's not suitable for production.
       It slowly compiles JSX with Babel in the browser and uses a large development build of React.
-
       Read this section for a production-ready setup with JSX:
       https://reactjs.org/docs/add-react-to-a-website.html#add-jsx-to-a-project
-
       In a larger project, you can use an integrated toolchain that includes JSX instead:
       https://reactjs.org/docs/create-a-new-react-app.html
-
       You can also use React without JSX, in which case you can remove Babel:
       https://reactjs.org/docs/react-without-jsx.html
     -->
