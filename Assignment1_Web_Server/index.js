@@ -113,14 +113,14 @@ app.post('/api/addPlayer', (req,res) => {
         position: req.body.position, 
         year: req.body.year
     }
-    Seahawks.insertMany([
-                          {name: player.name, 
-                          number: player.number, 
-                          position: player.position, 
-                          year: player.year}
-                        ]);
+    var query = {'number': player.number};
     
-    res.json(player + "Has been added");
+
+    Seahawks.findOneAndUpdate(query, player, {upsert: true}, function(err, doc) {
+        if (err) return res.send(500, {error: err});
+        return res.send('Succesfully saved.');
+});
+  
     
 });
 

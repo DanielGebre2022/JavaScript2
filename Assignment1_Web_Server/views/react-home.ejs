@@ -24,8 +24,8 @@
           year: <input type="text" name="year" onChange={props.handleChange} value={props.player.year || ""} onChange={props.handleChange} /><br/>
         </form>
         <button name="clear" onClick={props.clearForm}>Clear</button>&nbsp;
-        <button name="save" onClick={props.savePlayer}>Save</button>&nbsp;
-        <button name="delete" onClick={props.deletePlayer}>Delete</button>&nbsp; 
+        <button name="save" onClick={props.saveItem}>Save</button>&nbsp;
+        <button name="delete" onClick={props.deleteItem}>Delete</button>&nbsp; 
       </div>
       )
     }
@@ -46,36 +46,34 @@
               currentItem: {},
               
             }
-            /*playerLocater = (array, num) => {
-              for (var i = 0; i < array.length; i++){
-                for (var key in array[i]){
-                  if (array[i][key]=== num){
-                    return array[i]
-                  }
-                }
-              }
-            }*/
-        
-      
-          }
-          handleClick = (e) => {
-              
+        }
+          
+            handleClick = (e) => {
               e.preventDefault();
-              //console.log(e.target);
-              //console.log(e.target.innerText);
-              //console.log(e.target.id);
               //let key = e.target.number;
               let plNum = parseInt(e.target.innerText)
               let newPlayer = this.state.Seahawks.find((player) => player.number == plNum);
               this.setState({"currentItem": newPlayer})
-              
-              //this.setState({"currentItem": newPlayer});
               console.log(plNum);
               //console.log(e.target.year)
             }
+            deleteItem = () => {
+              if(this.state.currentItem == {}) return
+              let url = "/api/seahawks/delete/" + this.state.currentItem.number
+              fetch(url)
+              .then(res => res.json())
+              .then((json) => { console.log(json) });
+            }
             saveItem = () => {
               if(this.state.currentItem == {}) return
-              let newItem = this.state.currentItem;
+              //let newItem = this.state.currentItem;
+              fetch('/api/addPlayer', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json'},
+                body: JSON.stringify(this.state.currentItem)
+              })
+                .then(res => res.json())
+                .then((json) => { console.log(json) });
             }
             selectItem = (event) => {
               const found = this.state.Seahawks.find((player) => {
@@ -107,9 +105,8 @@
                   deleteItem={this.deleteItem}
                   clickHandler={this.handleClick}
                   />
-                
-              </div>
-            )
+            </div>
+          )
         }
     }
    
@@ -119,31 +116,8 @@
           <li key={player.number} onClick={props.clickHandler}>{player.number}
           </li>);
           return <ul>{playerList}</ul>;
-          
-        }
+    }
         
-       
-
-    
-    /*const Detail = (props) => {
-      constructor(props) {
-        super(props)
-        
-      }
-      
-      render() {
-        
-         
-          //window.location.href = "/detail?number=" + e.target.innerText;
-        
-        let {name, number, position, year} = this.props.player;
-        return (<div>
-                  <li key={number} onClick={this.props.clickHandler}>{number}</li> 
-                </div>)
-      }
-
-    }*/
-   
       const container = document.getElementById('root');
       const root = ReactDOM.createRoot(container);
       root.render(<App />);
